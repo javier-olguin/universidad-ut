@@ -19,52 +19,47 @@ public class alumno extends personaUt {
     }
 
     public void setNumExpediente(int numExpediente) {
-        if(numExpediente > 2000000000 && numExpediente < 2140000000){
+        if (numExpediente > 0) {
             this.numExpediente = numExpediente;
-        }else{
+        } else {
             System.out.println("Numero de Expediente invalido");
         }
     }
 
     public String getGrupo() {
-        if(grupo.isEmpty() || grupo.isBlank()){
-            System.out.println("El grupo es requeridp");
-            return "";
-        }else {
-            return grupo;
+        if (grupo == null || grupo.trim().isEmpty()) {
+            return "Sin Grupo";
         }
+        return grupo;
     }
 
     public void setGrupo(String grupo) {
-        if(!grupo.trim().isEmpty() && !grupo.isBlank()){
-
+        if (grupo != null && !grupo.trim().isEmpty()) {
             this.grupo = grupo;
-        }else {
-            System.out.println("El grupo es requeridp");
+        } else {
+            System.out.println("El grupo es requerido");
         }
-
     }
 
     public double getPromedio() {
-        String promedioFormato = String.format("%.1f",this.promedio);
+        String promedioFormato = String.format("%.1f", this.promedio);
         return Double.parseDouble(promedioFormato);
     }
 
     public void setPromedio(double promedio) {
-        if(promedio >= 0 && promedio <=10){
+        if (promedio >= 0 && promedio <= 10) {
             this.promedio = promedio;
-        }else{
+        } else {
             System.out.println("Promedio Invalido");
         }
-
     }
-    @Override
-    public String toString(){
-        return "Numero de Expediente: "+getNumExpediente()+"\n"+
-                super.toString()+"\n"+
-                "Grupo: "+getGrupo()+"\n"+
-                "Promedio: "+getPromedio()+"\n"+
-                "=====================================";
 
+    @Override
+    public String toString() {
+        return "Numero de Expediente: " + getNumExpediente() + "\n" +
+                super.toString() + "\n" +
+                "Grupo: " + getGrupo() + "\n" +
+                "Promedio: " + getPromedio() + "\n" +
+                "=====================================";
     }
 }

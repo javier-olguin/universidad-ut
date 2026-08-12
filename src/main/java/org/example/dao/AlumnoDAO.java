@@ -1,6 +1,5 @@
 package org.example.dao;
 
-import com.sun.security.jgss.GSSUtil;
 import org.example.config.conexion;
 import org.example.modelo.alumno;
 
@@ -11,69 +10,90 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class AlumnoDAO {
+
     public boolean inscribirAlumno(alumno alumno) {
         boolean inscrito = false;
-        String sql = "INSERT INTO alumnos VALUES (?,?,?,?,?)";
-        try(Connection conexion = org.example.config.conexion.conectar();
-            PreparedStatement stm =  conexion.prepareStatement(sql);) {
+        String sql = "INSERT INTO alumnos (numExpediente, nombre, curp, grupo, promedio) VALUES (?, ?, ?, ?, ?)";
 
-            stm.setInt(1,alumno.getNumExpediente());
-            stm.setString(2, alumno.getNombre());
-            stm.setString(3, alumno.getCurp());
-            stm.setString(4,alumno.getGrupo());
-            stm.setDouble(5,alumno.getPromedio());
-            stm.executeUpdate();
-            System.out.println("Registro realizado Correctamente");
+        try (Connection con = conexion.conectar()) {
+            if (con == null) {
+                System.out.println("[ERROR DAO] No hay conexión con la base de datos.");
+                return false;
+            }
 
+            try (PreparedStatement stm = con.prepareStatement(sql)) {
+                stm.setInt(1, alumno.getNumExpediente());
+                stm.setString(2, alumno.getNombre());
+                stm.setString(3, alumno.getCurp());
+                stm.setString(4, alumno.getGrupo());
+                stm.setDouble(5, alumno.getPromedio());
+
+                int filas = stm.executeUpdate();
+                if (filas > 0) {
+                    System.out.println(">>> Alumno registrado correctamente en la Base de Datos <<<");
+                    inscrito = true;
+                }
+            }
         } catch (SQLException err) {
-            System.out.println("Error "+err.getMessage());
+            System.out.println("[ERROR MySQL] Error al inscribir alumno: " + err.getMessage());
         }
 
         return inscrito;
     }
-    public ArrayList<alumno> extraerAlumno(){
-        ArrayList<alumno> alumnos = new ArrayList<alumno>();
-        String  sql = "SELECT * FROM alumnos";
-        try(Connection conexion = org.example.config.conexion.conectar();
-            PreparedStatement stm = conexion.prepareStatement(sql);){
-            ResultSet rs = stm.executeQuery();
-            while (rs.next()){
-                alumno alumno = new alumno();
-                alumno.setNumExpediente(rs.getInt("numExpediente"));
-                alumno.setNombre(rs.getString("nombre"));
-                alumno.setCurp(rs.getString("curp"));
-                alumno.setGrupo(rs.getString("grupo"));
-                alumno.setPromedio(rs.getDouble("promedio"));
-                alumnos.add(alumno);
-            }
 
-        }catch(SQLException err){
-            System.out.println("Error al extraer alumnos"+err.getMessage());
+    public ArrayList<alumno> extraerAlumno() {
+        ArrayList<alumno> alumnos = new ArrayList<>();
+        String sql = "SELECT * FROM alumnos";
+
+        try (Connection con = conexion.conectar()) {
+            if (con == null) return alumnos;
+
+            try (PreparedStatement stm = con.prepareStatement(sql);
+                 ResultSet rs = stm.executeQuery()) {
+
+                while (rs.next()) {
+                    alumno alu = new alumno();
+                    alu.setNumExpediente(rs.getInt("numExpediente"));
+                    alu.setNombre(rs.getString("nombre"));
+                    alu.setCurp(rs.getString("curp"));
+                    alu.setGrupo(rs.getString("grupo"));
+                    alu.setPromedio(rs.getDouble("promedio"));
+                    alumnos.add(alu);
+                }
+            }
+        } catch (SQLException err) {
+            System.out.println("[ERROR MySQL] " + err.getMessage());
         }
+
         return alumnos;
-
     }
-    public boolean actualizar(alumno alumno){
+
+    public boolean actualizar(alumno alumno) {
         boolean actualizado = false;
-        String sql = "UPDATE alumnos SET nombre = ?, curp = ?, grupo = ?, promedio = ? WHERE numExpediente = ? ";
-        try(Connection conexion = org.example.config.conexion.conectar();
-            PreparedStatement stm =  conexion.prepareStatement(sql);){
-            stm.setString(1,alumno.getNombre());
-            stm.setString(2,alumno.getCurp());
-            stm.setString(3,alumno.getGrupo());
-            stm.setDouble(4,alumno.getPromedio());
-            stm.setInt(5,alumno.getNumExpediente());
-            int registrosAfectados = stm.executeUpdate();
-            if(registrosAfectados > 0 ){
-                System.out.println("Alumno Actualizado Correctamente");
-                actualizado = true;
-            }else{
-                System.out.println("Te la volaste master tu Expediente no existe");
+        String sql = "UPDATE alumnos SET nombre = ?, curp = ?, grupo = ?, promedio = ? WHERE numExpediente = ?";
+
+        try (Connection con = conexion.conectar()) {
+            if (con == null) return false;
+
+            try (PreparedStatement stm = con.prepareStatement(sql)) {
+                stm.setString(1, alumno.getNombre());
+                stm.setString(2, alumno.getCurp());
+                stm.setString(3, alumno.getGrupo());
+                stm.setDouble(4, alumno.getPromedio());
+                stm.setInt(5, alumno.getNumExpediente());
+
+                int registrosAfectados = stm.executeUpdate();
+                if (registrosAfectados > 0) {
+                    System.out.println(">>> Alumno actualizado correctamente <<<");
+                    actualizado = true;
+                } else {
+                    System.out.println("[ADVERTENCIA] No existe el expediente ingresado.");
+                }
             }
-        }catch(SQLException err){
-            System.out.println("Error al actualizar Alumno"+err.getMessage());
+        } catch (SQLException err) {
+            System.out.println("[ERROR MySQL] " + err.getMessage());
         }
+
         return actualizado;
     }
-
 }
