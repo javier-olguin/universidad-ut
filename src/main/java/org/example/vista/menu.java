@@ -34,7 +34,6 @@ public class menu {
         System.out.print("Promedio (Valor entre 0.0 y 10.0, ej: 9.5): ");
         alumnoNuevo.setPromedio(Double.parseDouble(leer.readLine()));
 
-        // Guardar en la base de datos
         alumnoDAO.inscribirAlumno(alumnoNuevo);
     }
 
@@ -73,7 +72,20 @@ public class menu {
         alumnoDAO.actualizar(alumnoAct);
     }
 
-    private static void bajaAlumno() {}
+    private static void bajaAlumno() throws IOException {
+        System.out.println("\n--- DAR DE BAJA ALUMNO ---");
+        System.out.print("Ingresa el Número de Expediente del alumno a eliminar: ");
+        int numExpediente = Integer.parseInt(leer.readLine());
+
+        alumnoDAO.bajaAlumno(numExpediente);
+    }
+    private static void bajaProfesor() throws IOException {
+        System.out.println("\n--- DAR DE BAJA PROFESOR ---");
+        System.out.print("Ingresa el Número de Empleado del profesor a eliminar: ");
+        int numEmpleado = Integer.parseInt(leer.readLine());
+
+        profesorDAO.bajaProfesor(numEmpleado);
+    }
     private static void buscarAlumno() {}
 
     private static void registrarProfesor() throws IOException {
@@ -95,7 +107,6 @@ public class menu {
         System.out.print("Sueldo (Valor positivo mayor a $0.0, ej: 15000.50): ");
         profe.setSueldo(Double.parseDouble(leer.readLine()));
 
-        // Guardar en la base de datos
         profesorDAO.registrarProfesor(profe);
     }
 
@@ -134,6 +145,7 @@ public class menu {
         profesorDAO.actualizar(profeAct);
     }
 
+
     public static void menu() throws IOException {
         int salir = 0;
         do {
@@ -146,7 +158,8 @@ public class menu {
             System.out.println("6.- Registrar Profesor");
             System.out.println("7.- Mostrar Profesores");
             System.out.println("8.- Actualizar Profesor");
-            System.out.println("9.- Salir");
+            System.out.println("9.- Dar de baja Profesor");
+            System.out.println("10.- Salir");
             System.out.println("========================");
             System.out.print("Elige tu Opción: ");
 
@@ -183,12 +196,15 @@ public class menu {
                     actualizarProfesor();
                     break;
                 case 9:
+                    bajaProfesor();
+                    break;
+                case 10:
                     System.out.println("Saliendo del programa...");
                     break;
                 default:
                     System.out.println("Opción Inválida");
                     break;
             }
-        } while (salir != 9);
+        } while (salir != 10);
     }
 }

@@ -94,4 +94,31 @@ public class ProfesorDAO {
 
         return actualizado;
     }
+    public boolean bajaProfesor(int numEmpleado) {
+        boolean eliminado = false;
+        String sql = "DELETE FROM profesores WHERE numEmpleado = ?";
+
+        try (Connection con = conexion.conectar()) {
+            if (con == null) {
+                System.out.println("[ERROR DAO] No hay conexión activa a la base de datos.");
+                return false;
+            }
+
+            try (PreparedStatement stm = con.prepareStatement(sql)) {
+                stm.setInt(1, numEmpleado);
+
+                int registrosAfectados = stm.executeUpdate();
+                if (registrosAfectados > 0) {
+                    System.out.println(">>> Profesor dado de baja correctamente en MySQL <<<");
+                    eliminado = true;
+                } else {
+                    System.out.println("[ADVERTENCIA] No se encontró ningún profesor con el número de empleado ingresado.");
+                }
+            }
+        } catch (SQLException err) {
+            System.out.println("[ERROR MySQL] Error al dar de baja al profesor: " + err.getMessage());
+        }
+
+        return eliminado;
+    }
 }
