@@ -123,4 +123,35 @@ public class AlumnoDAO {
 
         return eliminado;
     }
+
+    public alumno buscarAlumno(int numExpediente) {
+        alumno alu = null;
+        String sql = "SELECT * FROM alumnos WHERE numExpediente = ?";
+
+        try (Connection con = conexion.conectar()) {
+            if (con == null) {
+                System.out.println("[ERROR DAO] No hay conexión activa a la base de datos.");
+                return null;
+            }
+
+            try (PreparedStatement stm = con.prepareStatement(sql)) {
+                stm.setInt(1, numExpediente);
+
+                try (ResultSet rs = stm.executeQuery()) {
+                    if (rs.next()) {
+                        alu = new alumno();
+                        alu.setNumExpediente(rs.getInt("numExpediente"));
+                        alu.setNombre(rs.getString("nombre"));
+                        alu.setCurp(rs.getString("curp"));
+                        alu.setGrupo(rs.getString("grupo"));
+                        alu.setPromedio(rs.getDouble("promedio"));
+                    }
+                }
+            }
+        } catch (SQLException err) {
+            System.out.println("[ERROR MySQL] Error al buscar alumno: " + err.getMessage());
+        }
+
+        return alu;
+    }
 }

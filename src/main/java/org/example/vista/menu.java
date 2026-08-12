@@ -4,7 +4,6 @@ import org.example.dao.AlumnoDAO;
 import org.example.dao.ProfesorDAO;
 import org.example.modelo.alumno;
 import org.example.modelo.Profesor;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -79,6 +78,7 @@ public class menu {
 
         alumnoDAO.bajaAlumno(numExpediente);
     }
+
     private static void bajaProfesor() throws IOException {
         System.out.println("\n--- DAR DE BAJA PROFESOR ---");
         System.out.print("Ingresa el Número de Empleado del profesor a eliminar: ");
@@ -86,7 +86,21 @@ public class menu {
 
         profesorDAO.bajaProfesor(numEmpleado);
     }
-    private static void buscarAlumno() {}
+
+    private static void buscarAlumno() throws IOException {
+        System.out.println("\n--- BUSCAR ALUMNO ---");
+        System.out.print("Ingresa el Número de Expediente del alumno a buscar: ");
+        int numExpediente = Integer.parseInt(leer.readLine());
+
+        alumno alu = alumnoDAO.buscarAlumno(numExpediente);
+
+        if (alu != null) {
+            System.out.println("\n========== ALUMNO ENCONTRADO ==========");
+            System.out.println(alu);
+        } else {
+            System.out.println("\n[ADVERTENCIA] No se encontró ningún alumno con el expediente " + numExpediente);
+        }
+    }
 
     private static void registrarProfesor() throws IOException {
         System.out.println("\n--- REGISTRO DE PROFESOR ---");
@@ -145,6 +159,20 @@ public class menu {
         profesorDAO.actualizar(profeAct);
     }
 
+    private static void buscarProfesor() throws IOException {
+        System.out.println("\n--- BUSCAR PROFESOR ---");
+        System.out.print("Ingresa el Número de Empleado del profesor a buscar: ");
+        int numEmpleado = Integer.parseInt(leer.readLine());
+
+        Profesor profe = profesorDAO.buscarProfesor(numEmpleado);
+
+        if (profe != null) {
+            System.out.println("\n========== PROFESOR ENCONTRADO ==========");
+            System.out.println(profe);
+        } else {
+            System.out.println("\n[ADVERTENCIA] No se encontró ningún profesor con el número de empleado " + numEmpleado);
+        }
+    }
 
     public static void menu() throws IOException {
         int salir = 0;
@@ -159,7 +187,8 @@ public class menu {
             System.out.println("7.- Mostrar Profesores");
             System.out.println("8.- Actualizar Profesor");
             System.out.println("9.- Dar de baja Profesor");
-            System.out.println("10.- Salir");
+            System.out.println("10.- Buscar Profesor");
+            System.out.println("11.- Salir");
             System.out.println("========================");
             System.out.print("Elige tu Opción: ");
 
@@ -199,12 +228,15 @@ public class menu {
                     bajaProfesor();
                     break;
                 case 10:
+                    buscarProfesor();
+                    break;
+                case 11:
                     System.out.println("Saliendo del programa...");
                     break;
                 default:
                     System.out.println("Opción Inválida");
                     break;
             }
-        } while (salir != 10);
+        } while (salir != 11);
     }
 }

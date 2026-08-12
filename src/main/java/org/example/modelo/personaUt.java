@@ -33,7 +33,8 @@ public class personaUt {
     public void setCurp(String curp) {
         if(curp != null && curp.trim().length() == 18 && !curp.isBlank()){
             this.curp = curp;
-        }else{
+        }
+        else{
             System.out.println("CURP invalido");
         }
     }

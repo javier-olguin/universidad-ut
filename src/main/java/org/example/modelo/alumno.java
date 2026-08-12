@@ -21,7 +21,8 @@ public class alumno extends personaUt {
     public void setNumExpediente(int numExpediente) {
         if (numExpediente > 0) {
             this.numExpediente = numExpediente;
-        } else {
+        }
+        else {
             System.out.println("Numero de Expediente invalido");
         }
     }
@@ -36,7 +37,8 @@ public class alumno extends personaUt {
     public void setGrupo(String grupo) {
         if (grupo != null && !grupo.trim().isEmpty()) {
             this.grupo = grupo;
-        } else {
+        }
+        else {
             System.out.println("El grupo es requerido");
         }
     }
@@ -49,7 +51,8 @@ public class alumno extends personaUt {
     public void setPromedio(double promedio) {
         if (promedio >= 0 && promedio <= 10) {
             this.promedio = promedio;
-        } else {
+        }
+        else {
             System.out.println("Promedio Invalido");
         }
     }

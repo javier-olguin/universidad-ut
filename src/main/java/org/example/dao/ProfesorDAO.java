@@ -2,7 +2,6 @@ package org.example.dao;
 
 import org.example.config.conexion;
 import org.example.modelo.Profesor;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ProfesorDAO {
-
     public boolean registrarProfesor(Profesor profesor) {
         boolean registrado = false;
         String sql = "INSERT INTO profesores (numEmpleado, nombre, curp, puesto, sueldo) VALUES (?, ?, ?, ?, ?)";
@@ -34,7 +32,6 @@ public class ProfesorDAO {
         } catch (SQLException err) {
             System.out.println("[ERROR MySQL] Error al registrar profesor: " + err.getMessage());
         }
-
         return registrado;
     }
 
@@ -62,7 +59,6 @@ public class ProfesorDAO {
         } catch (SQLException err) {
             System.out.println("[ERROR MySQL] " + err.getMessage());
         }
-
         return profesores;
     }
 
@@ -94,6 +90,7 @@ public class ProfesorDAO {
 
         return actualizado;
     }
+
     public boolean bajaProfesor(int numEmpleado) {
         boolean eliminado = false;
         String sql = "DELETE FROM profesores WHERE numEmpleado = ?";
@@ -118,7 +115,36 @@ public class ProfesorDAO {
         } catch (SQLException err) {
             System.out.println("[ERROR MySQL] Error al dar de baja al profesor: " + err.getMessage());
         }
-
         return eliminado;
+    }
+
+    public Profesor buscarProfesor(int numEmpleado) {
+        Profesor profe = null;
+        String sql = "SELECT * FROM profesores WHERE numEmpleado = ?";
+
+        try (Connection con = conexion.conectar()) {
+            if (con == null) {
+                System.out.println("[ERROR DAO] No hay conexión activa a la base de datos.");
+                return null;
+            }
+
+            try (PreparedStatement stm = con.prepareStatement(sql)) {
+                stm.setInt(1, numEmpleado);
+
+                try (ResultSet rs = stm.executeQuery()) {
+                    if (rs.next()) {
+                        profe = new Profesor();
+                        profe.setNumEmpleado(rs.getInt("numEmpleado"));
+                        profe.setNombre(rs.getString("nombre"));
+                        profe.setCurp(rs.getString("curp"));
+                        profe.setPuesto(rs.getString("puesto"));
+                        profe.setSueldo(rs.getDouble("sueldo"));
+                    }
+                }
+            }
+        } catch (SQLException err) {
+            System.out.println("[ERROR MySQL] Error al buscar profesor: " + err.getMessage());
+        }
+        return profe;
     }
 }
