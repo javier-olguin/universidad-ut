@@ -5,7 +5,8 @@ public class personaUt {
     private String curp;
 
     public personaUt(){
-
+        this.nombre = "Sin nombre";
+        this.curp = "SIN_CURP_VALIDA";
     }
 
     public personaUt(String nombre, String curp) {
