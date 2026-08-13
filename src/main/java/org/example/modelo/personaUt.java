@@ -1,13 +1,10 @@
 package org.example.modelo;
 
-public class personaUt {
-    private String nombre;
-    private String curp;
+public abstract class personaUt {
+    protected String nombre;
+    protected String curp;
 
-    public personaUt(){
-        this.nombre = "Sin nombre";
-        this.curp = "SIN_CURP_VALIDA";
-    }
+    public personaUt() {}
 
     public personaUt(String nombre, String curp) {
         setNombre(nombre);
@@ -19,28 +16,31 @@ public class personaUt {
     }
 
     public void setNombre(String nombre) {
-        if(nombre != null && !nombre.trim().isEmpty()){
+        if (nombre != null && !nombre.trim().isEmpty()) {
             this.nombre = nombre;
-        }else{
-            System.out.println("Dato Invalido ");
+        } else {
+            System.out.println("El nombre es requerido");
         }
     }
 
     public String getCurp() {
-        return curp.toUpperCase();
+        return curp;
     }
 
     public void setCurp(String curp) {
-        if(curp != null && curp.trim().length() == 18 && !curp.isBlank()){
+        if (curp != null && curp.trim().length() == 18) {
             this.curp = curp;
-        }
-        else{
-            System.out.println("CURP invalido");
+        } else {
+            System.out.println("La CURP debe tener exactamente 18 caracteres");
         }
     }
+
+    public abstract String mostrarTipoPersona();
+
     @Override
-    public String toString(){
-        return "Nombre: "+getNombre()+"\n"+
-                "Curp: "+getCurp();
+    public String toString() {
+        return "Tipo: " + mostrarTipoPersona() + "\n" +
+                "Nombre: " + getNombre() + "\n" +
+                "CURP: " + getCurp();
     }
 }

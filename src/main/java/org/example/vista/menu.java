@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import org.example.modelo.personaUt;
 
 public class menu {
     static AlumnoDAO alumnoDAO = new AlumnoDAO();
@@ -174,6 +175,25 @@ public class menu {
         }
     }
 
+    private static void mostrarComunidadUniversitaria() {
+        // Lista polimórfica que almacena referencias del tipo padre (personaUt)
+        ArrayList<personaUt> comunidad = new ArrayList<>();
+
+        // Agregamos tanto alumnos como profesores en la misma lista
+        comunidad.addAll(alumnoDAO.extraerAlumno());
+        comunidad.addAll(profesorDAO.extraerProfesores());
+
+        if (comunidad.isEmpty()) {
+            System.out.println("\nNo hay miembros en la comunidad universitaria.");
+        } else {
+            System.out.println("\n========== COMUNIDAD UNIVERSITARIA (POLIMORFISMO) ==========");
+            for (personaUt persona : comunidad) {
+                // Llama dinámicamente al toString() correspondiente según si la instancia es Alumno o Profesor
+                System.out.println(persona);
+            }
+        }
+    }
+
     public static void menu() throws IOException {
         int salir = 0;
         do {
@@ -188,7 +208,8 @@ public class menu {
             System.out.println("8.- Actualizar Profesor");
             System.out.println("9.- Dar de baja Profesor");
             System.out.println("10.- Buscar Profesor");
-            System.out.println("11.- Salir");
+            System.out.println("11.- Mostrar Comunidad Universitaria");
+            System.out.println("12.- Salir");
             System.out.println("========================");
             System.out.print("Elige tu Opción: ");
 
@@ -231,12 +252,15 @@ public class menu {
                     buscarProfesor();
                     break;
                 case 11:
+                    mostrarComunidadUniversitaria();
+                    break;
+                case 12:
                     System.out.println("Saliendo del programa...");
                     break;
                 default:
                     System.out.println("Opción Inválida");
                     break;
             }
-        } while (salir != 11);
+        } while (salir != 12);
     }
 }

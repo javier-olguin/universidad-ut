@@ -1,17 +1,32 @@
 package org.example.modelo;
 
-public class alumno extends personaUt {
+public class alumno extends personaUt implements Ensenable, Evaluable {
     private int numExpediente;
     private String grupo;
     private double promedio;
 
-    public alumno(){}
+    public alumno() {}
 
     public alumno(String nombre, String curp, int numExpediente, String grupo, double promedio) {
         super(nombre, curp);
         setNumExpediente(numExpediente);
         setGrupo(grupo);
         setPromedio(promedio);
+    }
+
+    @Override
+    public String mostrarTipoPersona() {
+        return "Alumno";
+    }
+
+    @Override
+    public void aprender() {
+        System.out.println("El alumno " + getNombre() + " está aprendiendo.");
+    }
+
+    @Override
+    public void recibirEvaluacion() {
+        System.out.println("El alumno " + getNombre() + " ha recibido su evaluación.");
     }
 
     public int getNumExpediente() {
@@ -21,8 +36,7 @@ public class alumno extends personaUt {
     public void setNumExpediente(int numExpediente) {
         if (numExpediente > 0) {
             this.numExpediente = numExpediente;
-        }
-        else {
+        } else {
             System.out.println("Numero de Expediente invalido");
         }
     }
@@ -37,8 +51,7 @@ public class alumno extends personaUt {
     public void setGrupo(String grupo) {
         if (grupo != null && !grupo.trim().isEmpty()) {
             this.grupo = grupo;
-        }
-        else {
+        } else {
             System.out.println("El grupo es requerido");
         }
     }
@@ -51,16 +64,15 @@ public class alumno extends personaUt {
     public void setPromedio(double promedio) {
         if (promedio >= 0 && promedio <= 10) {
             this.promedio = promedio;
-        }
-        else {
+        } else {
             System.out.println("Promedio Invalido");
         }
     }
 
     @Override
     public String toString() {
-        return "Numero de Expediente: " + getNumExpediente() + "\n" +
-                super.toString() + "\n" +
+        return super.toString() + "\n" +
+                "Número de Expediente: " + getNumExpediente() + "\n" +
                 "Grupo: " + getGrupo() + "\n" +
                 "Promedio: " + getPromedio() + "\n" +
                 "=====================================";
